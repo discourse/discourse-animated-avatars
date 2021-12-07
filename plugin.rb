@@ -17,7 +17,7 @@ after_initialize do
       alias_method :get_optimized_image_orig, :get_optimized_image
       def get_optimized_image(upload, size)
         return upload if (upload.extension == "gif" && request.format == "image/gif")
-        get_optimized_image_orig
+        get_optimized_image_orig(upload, size)
       end
     end
   end
