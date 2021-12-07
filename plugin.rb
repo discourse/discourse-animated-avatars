@@ -21,7 +21,7 @@ after_initialize do
       end
     end
   end
-  add_to_class(::User, :animated_avatar) do
+  add_to_class(:user, :animated_avatar) do
     uploaded_avatar.url if uploaded_avatar.animated?
   end
 
