@@ -3,6 +3,7 @@
 # about: This plugin adds support for animated avatars
 # version: 0.1
 # url: https://github.com/featheredtoast/discourse-animated-avatars
+# transpile_js: true
 
 after_initialize do
   reloadable_patch do
@@ -27,6 +28,9 @@ after_initialize do
 
   add_to_serializer(:basic_user, :animated_avatar) do
     user.try(:animated_avatar)
+  end
+  add_to_serializer(:post, :animated_avatar) do
+    object.user.try(:animated_avatar)
   end
 end
 

@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -62,13 +63,34 @@ export default {
       }
 
       api.customUserAvatarClasses((user) => {
-        if (get(user, "user").animated_avatar) {
+        if (get(user, "user")?.animated_avatar != null) {
+          return ["animated-avatar"];
+        }
+        return [];
+      });
+
+      api.includePostAttributes("animated_avatar");
+      api.addPostClassesCallback((attrs) => {
+        if (attrs?.animated_avatar != null) {
           return ["animated-avatar"];
         }
         return [];
       });
 
       api.modifyClass("component:topic-list", hoverExtension());
+
+      api.reopenWidget("post", {
+        mouseOver() {
+          if (this.attrs?.animated_avatar != null) {
+            console.log("mouse over");
+          }
+        },
+        mouseOut() {
+          if (this.attrs?.animated_avatar != null) {
+            console.log("mouse out");
+          }
+        },
+      });
     });
   },
 };
