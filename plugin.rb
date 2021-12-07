@@ -7,14 +7,14 @@
 after_initialize do
   reloadable_patch do
     class ::UploadCreator
-      alias_method :should_crop?, :should_crop_orig?
+      alias_method :should_crop_orig?, :should_crop?
       def should_crop?
         return false if ['avatar'].include?(@opts[:type]) && animated?
         should_crop_orig?
       end
     end
     class ::UserAvatarsController
-      alias_method :get_optimized_image, :get_optimized_image_orig
+      alias_method :get_optimized_image_orig, :get_optimized_image
       def get_optimized_image(upload, size)
         return upload if (upload.extension == "gif" && request.format == "image/gif")
         get_optimized_image_orig
