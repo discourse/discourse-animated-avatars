@@ -22,7 +22,7 @@ after_initialize do
     end
   end
   add_to_class(:user, :animated_avatar) do
-    uploaded_avatar.url if uploaded_avatar.animated?
+    uploaded_avatar&.url if uploaded_avatar&.animated?
   end
 
   add_to_serializer(:basic_user, :animated_avatar) do
