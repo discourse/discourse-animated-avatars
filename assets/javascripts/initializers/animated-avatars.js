@@ -1,7 +1,40 @@
 import { get } from "@ember/object";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { prefersReducedMotion } from "discourse/lib/utilities";
+import { schedule } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
+
+function getPauseAnimateAvatarEventFn(
+  element = null,
+  avatarSelector = "img.animated-avatar"
+) {
+  return (event) => {
+    console.log("pause animate");
+    let images = [event.currentTarget];
+    if (element !== null) {
+      images = element.querySelectorAll(avatarSelector);
+    }
+    images.forEach((img) => {
+      img.src = img.src.replace(/\.gif$/, ".png");
+    });
+  };
+}
+
+function getAnimateAvatarEventFn(
+  element = null,
+  avatarSelector = "img.animated-avatar"
+) {
+  return (event) => {
+    console.log("animate");
+    let images = [event.currentTarget];
+    if (element !== null) {
+      images = element.querySelectorAll(avatarSelector);
+    }
+    images.forEach((img) => {
+      img.src = img.src.replace(/\.png$/, ".gif");
+    });
+  };
+}
 
 export function hoverExtension(selector = "img.animated-avatar") {
   return {
@@ -11,24 +44,8 @@ export function hoverExtension(selector = "img.animated-avatar") {
       this._super(...arguments);
       let targets = this.element.querySelectorAll(selector);
 
-      this._pauseAnimateAvatarEvent = (event) => {
-        let images = [event.currentTarget];
-        if (selector != "img.animated-avatar") {
-          images = event.currentTarget.querySelectorAll("img.animated-avatar");
-        }
-        images.forEach((img) => {
-          img.src = img.src.replace(/\.gif$/, ".png");
-        });
-      };
-      this._animateAvatarEvent = (event) => {
-        let images = [event.currentTarget];
-        if (selector != "img.animated-avatar") {
-          images = event.currentTarget.querySelectorAll("img.animated-avatar");
-        }
-        images.forEach((img) => {
-          img.src = img.src.replace(/\.png$/, ".gif");
-        });
-      };
+      this._pauseAnimateAvatarEvent = getPauseAnimateAvatarEventFn();
+      this._animateAvatarEvent = getAnimateAvatarEventFn();
 
       targets.forEach((target) => {
         target.addEventListener("mouseover", this._animateAvatarEvent, false);
@@ -80,14 +97,22 @@ export default {
       api.modifyClass("component:topic-list", hoverExtension());
 
       api.reopenWidget("post", {
-        mouseOver() {
-          if (this.attrs?.animated_avatar != null) {
-            console.log("mouse over");
+        mouseOver(event) {
+          const element = event.target.closest(".animated-avatar");
+          if (element) {
+            getAnimateAvatarEventFn(
+              element,
+              ".main-avatar>.avatar"
+            )(event.originalEvent);
           }
         },
-        mouseOut() {
-          if (this.attrs?.animated_avatar != null) {
-            console.log("mouse out");
+        mouseOut(event) {
+          const element = event.target.closest(".animated-avatar");
+          if (element) {
+            getPauseAnimateAvatarEventFn(
+              element,
+              ".main-avatar>.avatar"
+            )(event.originalEvent);
           }
         },
       });
