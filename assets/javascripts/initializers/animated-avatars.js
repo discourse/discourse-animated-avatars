@@ -57,14 +57,20 @@ function getAnimateAvatarEventFn(
   };
 }
 
-export function hoverExtension(selector = "img.animated-avatar") {
+export function hoverExtension(parentSelector = null, avatarSelector = null) {
   return {
     didInsertElement() {
       this._super(...arguments);
-      let targets = this.element.querySelectorAll(selector);
+      let targets = [this.element];
 
-      this._pauseAnimateAvatarEvent = getPauseAnimateAvatarEventFn();
-      this._animateAvatarEvent = getAnimateAvatarEventFn();
+      this._pauseAnimateAvatarEvent = getPauseAnimateAvatarEventFn(
+        parentSelector,
+        avatarSelector
+      );
+      this._animateAvatarEvent = getAnimateAvatarEventFn(
+        parentSelector,
+        avatarSelector
+      );
 
       targets.forEach((target) => {
         target.addEventListener("mouseover", this._animateAvatarEvent, false);
@@ -78,7 +84,7 @@ export function hoverExtension(selector = "img.animated-avatar") {
 
     willDestroyElement() {
       this._super(...arguments);
-      let targets = this.element.querySelectorAll(selector);
+      let targets = [this.element];
 
       targets.forEach((target) => {
         target.removeEventListener("mouseover", this._animateAvatarEvent);
@@ -113,9 +119,9 @@ export default {
         return [];
       });
 
-      api.modifyClass("component:topic-list", {
+      api.modifyClass("component:user-card-contents", {
         pluginId: "discourse-animated-avatar",
-        ...hoverExtension(),
+        ...hoverExtension(".card-content", "img.animated-avatar"),
       });
 
       api.reopenWidget("post", {
