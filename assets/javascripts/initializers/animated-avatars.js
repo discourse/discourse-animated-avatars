@@ -5,41 +5,60 @@ import { schedule } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function getPauseAnimateAvatarEventFn(
-  element = null,
-  avatarSelector = "img.animated-avatar"
+  eventParentSelector = null,
+  avatarSelector = null
 ) {
-  return (event) => {
-    console.log("pause animate");
-    let images = [event.currentTarget];
-    if (element !== null) {
-      images = element.querySelectorAll(avatarSelector);
+  return (e) => {
+    const target =
+      eventParentSelector != null
+        ? e.target.closest(eventParentSelector)
+        : e.target;
+
+    // We are still hovering over a parent target, do not pause
+    const center = document.elementsFromPoint(e.clientX, e.clientY);
+    if (center.some((ele) => ele == target)) {
+      return;
     }
+
+    const images =
+      avatarSelector != null
+        ? target.querySelectorAll(avatarSelector)
+        : [target];
     images.forEach((img) => {
-      img.src = img.src.replace(/\.gif$/, ".png");
+      // Only replace img source if this differs
+      let animatedImg = img.src.replace(/\.gif$/, ".png");
+      if (animatedImg !== img.src) {
+        img.src = img.src.replace(/\.gif$/, ".png");
+      }
     });
   };
 }
 
 function getAnimateAvatarEventFn(
-  element = null,
-  avatarSelector = "img.animated-avatar"
+  eventParentSelector = null,
+  avatarSelector = null
 ) {
-  return (event) => {
-    console.log("animate");
-    let images = [event.currentTarget];
-    if (element !== null) {
-      images = element.querySelectorAll(avatarSelector);
-    }
+  return (e) => {
+    const target =
+      eventParentSelector != null
+        ? e.target.closest(eventParentSelector)
+        : e.target;
+    const images =
+      avatarSelector != null
+        ? target.querySelectorAll(avatarSelector)
+        : [target];
     images.forEach((img) => {
-      img.src = img.src.replace(/\.png$/, ".gif");
+      // Only replace img source if this differs
+      let animatedImg = img.src.replace(/\.png$/, ".gif");
+      if (animatedImg !== img.src) {
+        img.src = img.src.replace(/\.png$/, ".gif");
+      }
     });
   };
 }
 
 export function hoverExtension(selector = "img.animated-avatar") {
   return {
-    pluginId: "discourse-animated-avatar",
-
     didInsertElement() {
       this._super(...arguments);
       let targets = this.element.querySelectorAll(selector);
@@ -94,27 +113,20 @@ export default {
         return [];
       });
 
-      api.modifyClass("component:topic-list", hoverExtension());
+      api.modifyClass("component:topic-list", {
+        pluginId: "discourse-animated-avatar",
+        ...hoverExtension(),
+      });
 
       api.reopenWidget("post", {
-        mouseOver(event) {
-          const element = event.target.closest(".animated-avatar");
-          if (element) {
-            getAnimateAvatarEventFn(
-              element,
-              ".main-avatar>.avatar"
-            )(event.originalEvent);
-          }
-        },
-        mouseOut(event) {
-          const element = event.target.closest(".animated-avatar");
-          if (element) {
-            getPauseAnimateAvatarEventFn(
-              element,
-              ".main-avatar>.avatar"
-            )(event.originalEvent);
-          }
-        },
+        mouseOver: getAnimateAvatarEventFn(
+          ".animated-avatar",
+          ".main-avatar>.avatar"
+        ),
+        mouseOut: getPauseAnimateAvatarEventFn(
+          ".animated-avatar",
+          ".main-avatar>.avatar"
+        ),
       });
     });
   },
