@@ -1,7 +1,7 @@
 import { get } from "@ember/object";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { schedule } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function getPauseAnimateAvatarEventFn(
@@ -119,9 +119,19 @@ export default {
         return [];
       });
 
-      api.modifyClass("component:user-card-contents", {
-        pluginId: "discourse-animated-avatar",
-        ...hoverExtension(".card-content", "img.animated-avatar"),
+      //      api.modifyClass("component:user-card-contents", {
+      //        pluginId: "discourse-animated-avatar",
+      //        ...hoverExtension(".card-content", "img.animated-avatar"),
+      //      });
+
+      api.onAppEvent("user-card:after-show", () => {
+        // Allow render
+        next(() => {
+          const img = document.querySelector("#user-card img.animated-avatar");
+          if (img) {
+            img.src = img.src.replace(/\.png$/, ".gif");
+          }
+        });
       });
 
       api.reopenWidget("post", {
