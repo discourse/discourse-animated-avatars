@@ -99,7 +99,7 @@ export default {
       }
 
       api.customUserAvatarClasses((user) => {
-        if (get(user, "user")?.animated_avatar != null) {
+        if (user?.animated_avatar != null) {
           return ["animated-avatar"];
         }
         return [];
