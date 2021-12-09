@@ -133,22 +133,27 @@ export default {
           }
         });
       });
-      api.onAppEvent("keyboard:move-selection", (articles, selectedArticle) => {
-        articles.forEach((a) => {
-          if (a.classList.contains("animated-avatar")) {
-            const img = a.querySelector(".main-avatar img.avatar");
+      api.onAppEvent(
+        "keyboard:move-selection",
+        ({ articles, selectedArticle }) => {
+          articles.forEach((a) => {
+            if (a.classList.contains("animated-avatar")) {
+              const img = a.querySelector(".main-avatar img.avatar");
+              if (img) {
+                img.src = img.src.replace(/\.gif$/, ".png");
+              }
+            }
+          });
+          if (selectedArticle.classList.contains("animated-avatar")) {
+            const img = selectedArticle.querySelector(
+              ".main-avatar img.avatar"
+            );
             if (img) {
-              img.src = img.src.replace(/\.gif$/, ".png");
+              img.src = img.src.replace(/\.png$/, ".gif");
             }
           }
-        });
-        if (selectedArticle.classList.contains("animated-avatar")) {
-          const img = selectedArticle.querySelector(".main-avatar img.avatar");
-          if (img) {
-            img.src = img.src.replace(/\.png$/, ".gif");
-          }
         }
-      });
+      );
 
       api.reopenWidget("post", {
         mouseOver: getAnimateAvatarEventFn(
