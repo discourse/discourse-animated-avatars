@@ -8,10 +8,47 @@
 after_initialize do
   reloadable_patch do
     class ::UploadCreator
-      alias_method :should_crop_orig?, :should_crop?
-      def should_crop?
-        return false if ['avatar'].include?(@opts[:type]) && animated?
-        should_crop_orig?
+      alias_method :crop_orig!, :crop!
+      def crop!
+        filename_with_correct_ext = "image.#{@image_info.type}"
+        if @opts[:type] == "avatar"
+          width = height = Discourse.avatar_sizes.max
+
+          # Center crop
+          original_size_squared = @image_info.size.min
+          start_x = (@image_info.size[0] - original_size_squared) / 2
+          start_y = (@image_info.size[1] - original_size_squared) / 2
+          crop = "#{start_x},#{start_y}+#{original_size_squared}" # Gifsicle crop args
+
+          OptimizedImage.resize_animated(@file.path, @file.path, width, height, filename: filename_with_correct_ext, crop: crop)
+        else
+          crop_orig!
+        end
+      end
+    end
+    class ::OptimizedImage
+      def self.resize_animated(from, to, width, height, opts = {})
+        optimize("resize_animated", from, to, "#{width}x#{height}", opts)
+      end
+      def self.resize_animated_instructions(from, to, dimensions, opts = {})
+        ensure_safe_paths!(from, to)
+        resize_method = opts[:scale_image] ? "scale" : "resize-fit"
+
+        instructions = %W{
+          gifsicle
+          --colors=#{opts[:colors] || 256}
+        }
+
+        if opts[:crop]
+          instructions << "--crop" << opts[:crop]
+        end
+
+        instructions.concat(%W{
+          --#{resize_method} #{dimensions}
+          --optimize=3
+          --output #{to}
+          #{from}
+        })
       end
     end
     class ::UserAvatarsController
