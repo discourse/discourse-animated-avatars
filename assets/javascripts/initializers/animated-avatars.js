@@ -4,6 +4,8 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+let animatedImages = [];
+
 function userCardShown() {
   return document.querySelector("#user-card.show");
 }
@@ -26,13 +28,14 @@ function getPauseAnimateAvatarEventFn(
 
     const images =
       avatarSelector != null
-        ? target.querySelectorAll(avatarSelector)
+        ? target?.querySelectorAll(avatarSelector)
         : [target];
     images.forEach((img) => {
       // Only replace img source if this differs
       let animatedImg = img.src.replace(/\.gif$/, ".png");
       if (animatedImg !== img.src) {
         img.src = img.src.replace(/\.gif$/, ".png");
+        animatedImages = animatedImages.filter((item) => item !== img);
       }
     });
   };
@@ -49,13 +52,14 @@ function getAnimateAvatarEventFn(
         : e.target;
     const images =
       avatarSelector != null
-        ? target.querySelectorAll(avatarSelector)
+        ? target?.querySelectorAll(avatarSelector)
         : [target];
     images.forEach((img) => {
       // Only replace img source if this differs
       let animatedImg = img.src.replace(/\.png$/, ".gif");
       if (animatedImg !== img.src && !userCardShown()) {
         img.src = img.src.replace(/\.png$/, ".gif");
+        animatedImages.push(img);
       }
     });
   };
@@ -131,6 +135,12 @@ export default {
       api.onAppEvent("user-card:after-show", () => {
         // Allow render
         next(() => {
+          // Do not animate other images
+          animatedImages.forEach((img) => {
+            img.src = img.src.replace(/\.gif$/, ".png");
+          });
+          animatedImages = [];
+
           const img = document.querySelector("#user-card img.animated-avatar");
           if (img) {
             img.src = img.src.replace(/\.png$/, ".gif");
