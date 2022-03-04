@@ -4,6 +4,10 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+function userCardShown() {
+  return document.querySelector("#user-card.show");
+}
+
 function getPauseAnimateAvatarEventFn(
   eventParentSelector = null,
   avatarSelector = null
@@ -50,7 +54,7 @@ function getAnimateAvatarEventFn(
     images.forEach((img) => {
       // Only replace img source if this differs
       let animatedImg = img.src.replace(/\.png$/, ".gif");
-      if (animatedImg !== img.src) {
+      if (animatedImg !== img.src && !userCardShown()) {
         img.src = img.src.replace(/\.png$/, ".gif");
       }
     });
@@ -148,7 +152,7 @@ export default {
             const img = selectedArticle.querySelector(
               ".main-avatar img.avatar"
             );
-            if (img) {
+            if (img && !userCardShown()) {
               img.src = img.src.replace(/\.png$/, ".gif");
             }
           }
