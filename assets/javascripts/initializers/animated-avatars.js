@@ -65,43 +65,6 @@ function getAnimateAvatarEventFn(
   };
 }
 
-export function hoverExtension(parentSelector = null, avatarSelector = null) {
-  return {
-    didInsertElement() {
-      this._super(...arguments);
-      let targets = [this.element];
-
-      this._pauseAnimateAvatarEvent = getPauseAnimateAvatarEventFn(
-        parentSelector,
-        avatarSelector
-      );
-      this._animateAvatarEvent = getAnimateAvatarEventFn(
-        parentSelector,
-        avatarSelector
-      );
-
-      targets.forEach((target) => {
-        target.addEventListener("mouseover", this._animateAvatarEvent, false);
-        target.addEventListener(
-          "mouseout",
-          this._pauseAnimateAvatarEvent,
-          false
-        );
-      });
-    },
-
-    willDestroyElement() {
-      this._super(...arguments);
-      let targets = [this.element];
-
-      targets.forEach((target) => {
-        target.removeEventListener("mouseover", this._animateAvatarEvent);
-        target.removeEventListener("mouseout", this._pauseAnimateAvatarEvent);
-      });
-    },
-  };
-}
-
 export default {
   name: "animated-avatars",
 
@@ -126,11 +89,6 @@ export default {
         }
         return [];
       });
-
-      //      api.modifyClass("component:user-card-contents", {
-      //        pluginId: "discourse-animated-avatar",
-      //        ...hoverExtension(".card-content", "img.animated-avatar"),
-      //      });
 
       api.onAppEvent("user-card:after-show", () => {
         // Allow render
