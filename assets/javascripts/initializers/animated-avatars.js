@@ -30,7 +30,7 @@ function getPauseAnimateAvatarEventFn(
       avatarSelector != null
         ? target?.querySelectorAll(avatarSelector)
         : [target];
-    images.forEach((img) => {
+    images?.forEach((img) => {
       // Only replace img source if this differs
       let animatedImg = img.src.replace(/\.gif$/, ".png");
       if (animatedImg !== img.src) {
@@ -54,7 +54,7 @@ function getAnimateAvatarEventFn(
       avatarSelector != null
         ? target?.querySelectorAll(avatarSelector)
         : [target];
-    images.forEach((img) => {
+    images?.forEach((img) => {
       // Only replace img source if this differs
       let animatedImg = img.src.replace(/\.png$/, ".gif");
       if (animatedImg !== img.src && !userCardShown()) {
@@ -94,7 +94,7 @@ export default {
         // Allow render
         next(() => {
           // Do not animate other images
-          animatedImages.forEach((img) => {
+          animatedImages?.forEach((img) => {
             img.src = img.src.replace(/\.gif$/, ".png");
           });
           animatedImages = [];
@@ -108,7 +108,7 @@ export default {
       api.onAppEvent(
         "keyboard:move-selection",
         ({ articles, selectedArticle }) => {
-          articles.forEach((a) => {
+          articles?.forEach((a) => {
             if (a.classList.contains("animated-avatar")) {
               const img = a.querySelector(".main-avatar img.avatar");
               if (img) {
