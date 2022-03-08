@@ -19,6 +19,7 @@ after_initialize do
     # new crop functions if gifsicle is installed
     if gifsicle_installed
       class ::UploadCreator
+        alias_method :crop_orig!, :crop!
         def crop!
           filename_with_correct_ext = "image.#{@image_info.type}"
           if @opts[:type] == "avatar"
@@ -41,7 +42,6 @@ after_initialize do
           return false if ['avatar'].include?(@opts[:type]) && animated?
           should_crop_orig?
         end
-        alias_method :crop_orig!, :crop!
       end
     else
       # fallback if no gifsicle, no cropping for animated avatars
