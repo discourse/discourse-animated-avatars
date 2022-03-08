@@ -5,9 +5,57 @@ import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 let animatedImages = [];
+let allowAnimation = true;
 
 function userCardShown() {
   return document.querySelector("#user-card.show");
+}
+
+// Only play when the user card is not shown
+function playAvatarAnimation(img) {
+  if (!userCardShown()) {
+    play(img);
+  }
+}
+
+function play(img) {
+  if (img && allowAnimation) {
+    let animatedImg = img.src.replace(/\.png$/, ".gif");
+    if (animatedImg !== img.src) {
+      img.src = img.src.replace(/\.png$/, ".gif");
+      animatedImages.push(img);
+    }
+  }
+}
+
+function pause(img) {
+  if (img) {
+    let animatedImg = img.src.replace(/\.gif$/, ".png");
+    if (animatedImg !== img.src) {
+      img.src = img.src.replace(/\.gif$/, ".png");
+    }
+    animatedImages = animatedImages.filter((item) => item !== img);
+  }
+}
+function pauseAll(resumable = false) {
+  animatedImages?.forEach((img) => {
+    img.src = img.src.replace(/\.gif$/, ".png");
+  });
+
+  // pause all either due to a resumable event (temporarily prevent any animation event to fire until event is over)
+  // or we are stopping all animation, and will listen for future events to fire new animations
+  if (resumable) {
+    allowAnimation = false;
+  } else {
+    animatedImages = [];
+  }
+}
+
+function resumeAll() {
+  allowAnimation = true;
+  animatedImages?.forEach((img) => {
+    img.src = img.src.replace(/\.png$/, ".gif");
+  });
 }
 
 function getPauseAnimateAvatarEventFn(
@@ -31,12 +79,7 @@ function getPauseAnimateAvatarEventFn(
         ? target?.querySelectorAll(avatarSelector)
         : [target];
     images?.forEach((img) => {
-      // Only replace img source if this differs
-      let animatedImg = img.src.replace(/\.gif$/, ".png");
-      if (animatedImg !== img.src) {
-        img.src = img.src.replace(/\.gif$/, ".png");
-        animatedImages = animatedImages.filter((item) => item !== img);
-      }
+      pause(img);
     });
   };
 }
@@ -55,12 +98,7 @@ function getAnimateAvatarEventFn(
         ? target?.querySelectorAll(avatarSelector)
         : [target];
     images?.forEach((img) => {
-      // Only replace img source if this differs
-      let animatedImg = img.src.replace(/\.png$/, ".gif");
-      if (animatedImg !== img.src && !userCardShown()) {
-        img.src = img.src.replace(/\.png$/, ".gif");
-        animatedImages.push(img);
-      }
+      playAvatarAnimation(img);
     });
   };
 }
@@ -74,6 +112,9 @@ export default {
       if (prefersReducedMotion()) {
         return;
       }
+
+      window.addEventListener("blur", this.blurEvent);
+      window.addEventListener("focus", this.focusEvent);
 
       api.customUserAvatarClasses((user) => {
         if (user?.animated_avatar != null) {
@@ -94,15 +135,10 @@ export default {
         // Allow render
         next(() => {
           // Do not animate other images
-          animatedImages?.forEach((img) => {
-            img.src = img.src.replace(/\.gif$/, ".png");
-          });
-          animatedImages = [];
+          pauseAll();
 
-          const img = document.querySelector("#user-card img.animated-avatar");
-          if (img) {
-            img.src = img.src.replace(/\.png$/, ".gif");
-          }
+          // Play on user card with fewer conditions
+          play(document.querySelector("#user-card img.animated-avatar"));
         });
       });
       api.onAppEvent(
@@ -110,19 +146,13 @@ export default {
         ({ articles, selectedArticle }) => {
           articles?.forEach((a) => {
             if (a.classList.contains("animated-avatar")) {
-              const img = a.querySelector(".main-avatar img.avatar");
-              if (img) {
-                img.src = img.src.replace(/\.gif$/, ".png");
-              }
+              pause(a.querySelector(".main-avatar img.avatar"));
             }
           });
           if (selectedArticle.classList.contains("animated-avatar")) {
-            const img = selectedArticle.querySelector(
-              ".main-avatar img.avatar"
+            playAvatarAnimation(
+              selectedArticle.querySelector(".main-avatar img.avatar")
             );
-            if (img && !userCardShown()) {
-              img.src = img.src.replace(/\.png$/, ".gif");
-            }
           }
         }
       );
@@ -138,5 +168,18 @@ export default {
         ),
       });
     });
+  },
+
+  blurEvent() {
+    pauseAll(true);
+  },
+
+  focusEvent() {
+    resumeAll();
+  },
+
+  teardown() {
+    window.removeEventListener("blur", this.blurEvent);
+    window.removeEventListener("focus", this.focusEvent);
   },
 };
