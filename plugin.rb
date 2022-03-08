@@ -36,12 +36,6 @@ after_initialize do
             crop_orig!
           end
         end
-        # fallback no cropping for animated avatars
-        alias_method :should_crop_orig?, :should_crop?
-        def should_crop?
-          return false if ['avatar'].include?(@opts[:type]) && animated?
-          should_crop_orig?
-        end
       end
     else
       # fallback if no gifsicle, no cropping for animated avatars
