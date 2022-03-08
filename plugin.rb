@@ -7,25 +7,54 @@
 
 after_initialize do
   reloadable_patch do
-    class ::UploadCreator
-      alias_method :crop_orig!, :crop!
-      def crop!
-        filename_with_correct_ext = "image.#{@image_info.type}"
-        if @opts[:type] == "avatar"
-          width = height = Discourse.avatar_sizes.max
 
-          # Center crop
-          original_size_squared = @image_info.size.min
-          start_x = (@image_info.size[0] - original_size_squared) / 2
-          start_y = (@image_info.size[1] - original_size_squared) / 2
-          crop = "#{start_x},#{start_y}+#{original_size_squared}" # Gifsicle crop args
+    gifsicle_installed =
+      begin
+        Discourse::Utils.execute_command("gifsicle", "--version", "&>", "/dev/null", failure_message: "gifsicle not found")
+        true
+      rescue
+        false
+      end
 
-          OptimizedImage.resize_animated(@file.path, @file.path, width, height, filename: filename_with_correct_ext, crop: crop)
-        else
-          crop_orig!
+    # new crop functions if gifsicle is installed
+    if gifsicle_installed
+      class ::UploadCreator
+        def crop!
+          filename_with_correct_ext = "image.#{@image_info.type}"
+          if @opts[:type] == "avatar"
+            width = height = Discourse.avatar_sizes.max
+
+            # Center crop
+            original_size_squared = @image_info.size.min
+            start_x = (@image_info.size[0] - original_size_squared) / 2
+            start_y = (@image_info.size[1] - original_size_squared) / 2
+            crop = "#{start_x},#{start_y}+#{original_size_squared}" # Gifsicle crop args
+
+            OptimizedImage.resize_animated(@file.path, @file.path, width, height, filename: filename_with_correct_ext, crop: crop)
+          else
+            crop_orig!
+          end
         end
+        # fallback no cropping for animated avatars
+        alias_method :should_crop_orig?, :should_crop?
+        def should_crop?
+          return false if ['avatar'].include?(@opts[:type]) && animated?
+          should_crop_orig?
+        end
+        alias_method :crop_orig!, :crop!
+      end
+    else
+      # fallback if no gifsicle, no cropping for animated avatars
+      class ::UploadCreator
+        alias_method :should_crop_orig?, :should_crop?
+        def should_crop?
+          return false if ['avatar'].include?(@opts[:type]) && animated?
+          should_crop_orig?
+        end
+        alias_method :crop_orig!, :crop!
       end
     end
+
     class ::OptimizedImage
       def self.resize_animated(from, to, width, height, opts = {})
         optimize("resize_animated", from, to, "#{width}x#{height}", opts)
