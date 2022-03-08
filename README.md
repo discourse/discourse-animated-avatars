@@ -2,9 +2,12 @@
 
 Adds the ability for users to upload gif avatars which will animate on hover or selection in posts, user cards, and profile pages
 
-## app.yml
+## Enable gif resizing
 
-your `app.yml` needs to be configured to install gifsicle in addition to the plugin:
+Optionally, your `app.yml` may be configured to install gifsicle in addition to the plugin.
+
+This allows gif uploads to be cropped and resized to fit a square avatar. If the dependency is not included,
+gif uploads will keep the original aspect ratio.
 
 ```
 hooks:
