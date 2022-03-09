@@ -1,5 +1,3 @@
-import { get } from "@ember/object";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -70,7 +68,7 @@ function getPauseAnimateAvatarEventFn(
 
     // We are still hovering over a parent target, do not pause
     const center = document.elementsFromPoint(e.clientX, e.clientY);
-    if (center.some((ele) => ele == target)) {
+    if (center.some((ele) => ele === target)) {
       return;
     }
 
