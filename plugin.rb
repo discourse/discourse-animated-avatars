@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-# name: animated-avatars
+# name: discourse-animated-avatars
 # about: This plugin adds support for animated avatars
 # version: 0.1
-# url: https://github.com/featheredtoast/discourse-animated-avatars
+# url: https://github.com/discourse/discourse-animated-avatars
 # transpile_js: true
 
 after_initialize do

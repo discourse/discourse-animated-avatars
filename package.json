@@ -1,0 +1,10 @@
+{
+  "name": "discourse-animated-avatars",
+  "version": "0.1",
+  "repository": "https://github.com/discourse/discourse-animated-avatars",
+  "author": "Discourse",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint-config-discourse": "^3.0.0"
+  }
+}
