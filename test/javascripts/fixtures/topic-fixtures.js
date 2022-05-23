@@ -48,16 +48,14 @@ export default {
               clicks: 2,
             },
             {
-              url:
-                "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
+              url: "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
               internal: true,
               reflection: true,
               title: "Solving XDA-Developer style forums",
               clicks: 2,
             },
             {
-              url:
-                "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
+              url: "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
               internal: true,
               reflection: true,
               title:
@@ -65,8 +63,7 @@ export default {
               clicks: 1,
             },
             {
-              url:
-                "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
+              url: "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
               internal: true,
               reflection: true,
               title:
@@ -170,8 +167,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
+              url: "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
               internal: false,
               reflection: false,
               clicks: 118,
@@ -266,8 +262,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://github.com/discourse/discourse/blob/main/config/locales",
+              url: "https://github.com/discourse/discourse/blob/main/config/locales",
               internal: false,
               reflection: false,
               title:
@@ -275,8 +270,7 @@ export default {
               clicks: 62,
             },
             {
-              url:
-                "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
+              url: "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
               internal: true,
               reflection: true,
               title: "GitHub OneBox Rendering Issue",
@@ -468,8 +462,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
+              url: "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
               internal: false,
               reflection: false,
               title:
@@ -770,8 +763,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
+              url: "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
               internal: true,
               reflection: true,
               title: "What I love about WordPress plugins",
@@ -1926,26 +1918,8 @@ export default {
         },
       ],
       stream: [
-        398,
-        419,
-        1060,
-        3623,
-        3651,
-        3654,
-        3655,
-        3658,
-        3660,
-        3667,
-        3673,
-        3675,
-        3690,
-        3925,
-        3938,
-        3982,
-        3989,
-        3996,
-        4009,
-        4012,
+        398, 419, 1060, 3623, 3651, 3654, 3655, 3658, 3660, 3667, 3673, 3675,
+        3690, 3925, 3938, 3982, 3989, 3996, 4009, 4012,
       ],
       gaps: { before: {}, after: { 398: [4012] } },
     },
@@ -2175,8 +2149,7 @@ export default {
       ],
       links: [
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2196,8 +2169,7 @@ export default {
           domain: "www.localeapp.com",
         },
         {
-          url:
-            "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
+          url: "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
           title:
             "internationalization - Why do people use plain english as translation placeholders? - Stack Overflow",
           fancy_title: null,
@@ -2208,8 +2180,7 @@ export default {
           domain: "stackoverflow.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales",
           title:
             "discourse/config/locales at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2230,8 +2201,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "http://www.localeapp.com/projects/1537/translations?utf8=%E2%9C%93&search=source_code",
+          url: "http://www.localeapp.com/projects/1537/translations?utf8=%E2%9C%93&search=source_code",
           title: "langforums | Locale",
           fancy_title: null,
           internal: false,
@@ -2291,8 +2261,7 @@ export default {
           domain: "weblate.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/tree/main/config/locales",
+          url: "https://github.com/discourse/discourse/tree/main/config/locales",
           title:
             "discourse/config/locales at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2324,8 +2293,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/gururea/discourse/tree/master/config/locales",
+          url: "https://github.com/gururea/discourse/tree/master/config/locales",
           title:
             "discourse/config/locales at master · gururea/discourse · GitHub",
           fancy_title: null,
@@ -2336,8 +2304,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.en.yml#L691",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.en.yml#L691",
           title:
             "discourse/config/locales/client.en.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2358,8 +2325,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.nl.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.nl.yml",
           title:
             "discourse/config/locales/client.nl.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2370,8 +2336,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/commit/c5761eae8afe37e20cec0d0f9d14b85b6e585bda",
+          url: "https://github.com/discourse/discourse/commit/c5761eae8afe37e20cec0d0f9d14b85b6e585bda",
           title:
             "Support for Simplified Chinese thanks to tangramor · c5761ea · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2403,8 +2368,7 @@ export default {
           domain: "www.getlocalization.com",
         },
         {
-          url:
-            "http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/",
+          url: "http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/",
           title: "Discourse as Your First Rails App",
           fancy_title: null,
           internal: false,
@@ -2414,8 +2378,7 @@ export default {
           domain: "blog.discourse.org",
         },
         {
-          url:
-            "https://github.com/alxndr/discourse/blob/i18n-chinese/config/locales/server.zh.yml",
+          url: "https://github.com/alxndr/discourse/blob/i18n-chinese/config/locales/server.zh.yml",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2465,8 +2428,7 @@ export default {
           domain: "en.wikipedia.org",
         },
         {
-          url:
-            "http://www.slideshare.net/HeatherRivers/linguistic-potluck-crowdsourcing-localization-with-rails",
+          url: "http://www.slideshare.net/HeatherRivers/linguistic-potluck-crowdsourcing-localization-with-rails",
           title: "Linguistic Potluck: Crowdsourcing localization with Rails",
           fancy_title: null,
           internal: false,
@@ -2486,8 +2448,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "http://www.madanalogy.com/2012/06/rails-i18n-translations-in-yaml.html",
+          url: "http://www.madanalogy.com/2012/06/rails-i18n-translations-in-yaml.html",
           title:
             "Mad Analogy: Rails i18n translations in Yaml: translation tool support",
           fancy_title: null,
@@ -2539,8 +2500,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
+          url: "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
           title: "Solving XDA-Developer style forums",
           fancy_title: null,
           internal: true,
@@ -2590,8 +2550,7 @@ export default {
           domain: "blog.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/app/assets/javascripts/locales/date_locales.js",
+          url: "https://github.com/discourse/discourse/blob/main/app/assets/javascripts/locales/date_locales.js",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2621,8 +2580,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
+          url: "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
           title:
             "Comrades let's join our efforts on ukrainian and russian translations",
           fancy_title: null,
@@ -2643,8 +2601,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
+          url: "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
           title:
             "Bookmark/last read sometimes doesn't go to the end of a topic",
           fancy_title: null,
@@ -2655,8 +2612,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.de.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.de.yml",
           title:
             "discourse/config/locales/client.de.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2667,8 +2623,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
+          url: "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
           title: "What I love about WordPress plugins",
           fancy_title: null,
           internal: true,
@@ -2678,8 +2633,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
+          url: "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
           title: "GitHub OneBox Rendering Issue",
           fancy_title: null,
           internal: true,
@@ -2689,8 +2643,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/server.de.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/server.de.yml",
           title:
             "discourse/config/locales/server.de.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2711,8 +2664,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763",
+          url: "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763",
           title: "Translation Tools: Transifex? Localeapp?",
           fancy_title: null,
           internal: true,
@@ -2742,8 +2694,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763/41",
+          url: "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763/41",
           title: "Translation Tools: Transifex? Localeapp?",
           fancy_title: null,
           internal: true,
@@ -2825,8 +2776,7 @@ export default {
           "Mobile theme doesn't show last activity time for topics on category page",
         fancy_title:
           "Mobile theme doesn&rsquo;t show last activity time for topics on category page",
-        slug:
-          "mobile-theme-doesnt-show-last-activity-time-for-topics-on-category-page",
+        slug: "mobile-theme-doesnt-show-last-activity-time-for-topics-on-category-page",
         posts_count: 4,
         reply_count: 2,
         highest_post_number: 4,
@@ -2869,8 +2819,7 @@ export default {
           'Reply+{messagekey}@... optionally in header "from" in addition to "reply-to"',
         fancy_title:
           "Reply+{messagekey}@&hellip; optionally in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
-        slug:
-          "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
+        slug: "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
         posts_count: 1,
         reply_count: 0,
         highest_post_number: 1,
@@ -2950,8 +2899,7 @@ export default {
           "Support for Piwik Analytics as an alternative to Google Analytics",
         fancy_title:
           "Support for Piwik Analytics as an alternative to Google Analytics",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         posts_count: 53,
         reply_count: 41,
         highest_post_number: 65,
