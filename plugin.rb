@@ -83,7 +83,8 @@ after_initialize do
     end
   end
   add_to_class(:user, :animated_avatar) do
-    uploaded_avatar&.url if uploaded_avatar&.animated?
+    pass_tl_check = staff? || trust_level >= SiteSetting.animated_avatars_min_trust_level_to_display
+    uploaded_avatar&.url if uploaded_avatar&.animated? && pass_tl_check
   end
 
   add_to_serializer(:basic_user, :animated_avatar) do
