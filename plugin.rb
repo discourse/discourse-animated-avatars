@@ -7,12 +7,17 @@
 
 after_initialize do
   reloadable_patch do
-
     gifsicle_installed =
       begin
-        Discourse::Utils.execute_command("gifsicle", "--version", "&>", "/dev/null", failure_message: "gifsicle not found")
+        Discourse::Utils.execute_command(
+          "gifsicle",
+          "--version",
+          "&>",
+          "/dev/null",
+          failure_message: "gifsicle not found",
+        )
         true
-      rescue
+      rescue StandardError
         false
       end
 
@@ -31,7 +36,14 @@ after_initialize do
             start_y = (@image_info.size[1] - original_size_squared) / 2
             crop = "#{start_x},#{start_y}+#{original_size_squared}" # Gifsicle crop args
 
-            OptimizedImage.resize_animated(@file.path, @file.path, width, height, filename: filename_with_correct_ext, crop: crop)
+            OptimizedImage.resize_animated(
+              @file.path,
+              @file.path,
+              width,
+              height,
+              filename: filename_with_correct_ext,
+              crop: crop,
+            )
           else
             crop_orig!
           end
@@ -42,7 +54,7 @@ after_initialize do
       class ::UploadCreator
         alias_method :should_crop_orig?, :should_crop?
         def should_crop?
-          return false if ['avatar'].include?(@opts[:type]) && animated?
+          return false if ["avatar"].include?(@opts[:type]) && animated?
           should_crop_orig?
         end
         alias_method :crop_orig!, :crop!
@@ -57,21 +69,13 @@ after_initialize do
         ensure_safe_paths!(from, to)
         resize_method = opts[:scale_image] ? "scale" : "resize-fit"
 
-        instructions = %W{
-          gifsicle
-          --colors=#{opts[:colors] || 256}
-        }
+        instructions = %W[gifsicle --colors=#{opts[:colors] || 256}]
 
-        if opts[:crop]
-          instructions << "--crop" << opts[:crop]
-        end
+        instructions << "--crop" << opts[:crop] if opts[:crop]
 
-        instructions.concat(%W{
-          --#{resize_method} #{dimensions}
-          --optimize=3
-          --output #{to}
-          #{from}
-        })
+        instructions.concat(
+          %W[--#{resize_method} #{dimensions} --optimize=3 --output #{to} #{from}],
+        )
       end
     end
     class ::UserAvatarsController
@@ -87,14 +91,16 @@ after_initialize do
     uploaded_avatar&.url if uploaded_avatar&.animated? && pass_tl_check
   end
 
-  add_to_serializer(:basic_user, :animated_avatar) do
-    user.try(:animated_avatar)
-  end
-  add_to_serializer(:post, :animated_avatar) do
-    object.user.try(:animated_avatar)
-  end
+  add_to_serializer(:basic_user, :animated_avatar) { user.try(:animated_avatar) }
+  add_to_serializer(:post, :animated_avatar) { object.user.try(:animated_avatar) }
 end
 
 Discourse::Application.routes.append do
-  get "user_avatar/:hostname/:username/:size/:version.gif" => "user_avatars#show", constraints: { hostname: /[\w\.-]+/, size: /\d+/, username: RouteFormat.username, format: :gif }
+  get "user_avatar/:hostname/:username/:size/:version.gif" => "user_avatars#show",
+      :constraints => {
+        hostname: /[\w\.-]+/,
+        size: /\d+/,
+        username: RouteFormat.username,
+        format: :gif,
+      }
 end
