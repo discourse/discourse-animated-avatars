@@ -91,8 +91,16 @@ after_initialize do
     uploaded_avatar&.url if uploaded_avatar&.animated? && pass_tl_check
   end
 
-  add_to_serializer(:basic_user, :animated_avatar) { user.try(:animated_avatar) }
-  add_to_serializer(:post, :animated_avatar) { object.user.try(:animated_avatar) }
+  add_to_serializer(:basic_user, :animated_avatar) do
+    user.try(:animated_avatar)
+  rescue
+    nil
+  end
+  add_to_serializer(:post, :animated_avatar) do
+    object.user.try(:animated_avatar)
+  rescue
+    nil
+  end
 end
 
 Discourse::Application.routes.append do
