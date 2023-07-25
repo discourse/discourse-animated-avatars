@@ -3,7 +3,7 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 import boundAvatar from "discourse/helpers/bound-avatar";
 
 export default htmlHelper((user, size) => {
-  const avatar = boundAvatar.compute([user, size], {});
+  const avatar = boundAvatar(user, size);
   if (user.animated_avatar != null && !prefersReducedMotion()) {
     avatar.string = avatar.string.replace(/\.png/, ".gif");
   }
