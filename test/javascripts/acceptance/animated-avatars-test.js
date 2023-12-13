@@ -1,6 +1,6 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import Topics from "../fixtures/topic-fixtures";
 
 acceptance("Animated avatars topic tests", function (needs) {
