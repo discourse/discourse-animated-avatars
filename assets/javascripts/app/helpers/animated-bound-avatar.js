@@ -6,7 +6,7 @@ export default htmlHelper((user, size) => {
   const avatar = boundAvatar(user, size);
   if (user.animated_avatar != null && !prefersReducedMotion()) {
     console.log(avatar);
-    //avatar.string = avatar.string.replace(/\.png/, ".gif");
+    avatar.__string = avatar.__string.replace(/\.png/, ".gif");
   }
   return avatar;
 });
