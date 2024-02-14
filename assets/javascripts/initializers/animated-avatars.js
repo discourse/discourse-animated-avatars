@@ -1,6 +1,6 @@
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 
 let animatedImages = [];
 let allowAnimation = true;
