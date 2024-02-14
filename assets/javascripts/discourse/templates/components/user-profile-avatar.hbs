@@ -2,10 +2,11 @@
   {{animated-bound-avatar @user "huge"}}
   <UserAvatarFlair @user={{@user}} />
   {{! template-lint-disable no-capital-arguments }}
-  <PluginOutlet
-    @name="user-profile-avatar-flair"
-    @connectorTagName="div"
-    @outletArgs={{hash model=@user}}
-    @tagName="div"
-  />
+  <div>
+    <PluginOutlet
+      @name="user-profile-avatar-flair"
+      @connectorTagName="div"
+      @outletArgs={{hash model=@user}}
+    />
+    </div>
 </div>
