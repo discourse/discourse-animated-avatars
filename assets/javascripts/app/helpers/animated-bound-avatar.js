@@ -1,6 +1,6 @@
+import { htmlSafe } from "@ember/template";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { htmlSafe } from "@ember/template";
 
 export default function (user, size) {
   const avatar = boundAvatar(user, size);
