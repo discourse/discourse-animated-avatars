@@ -1,5 +1,4 @@
 import { next } from "@ember/runloop";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
@@ -154,61 +153,6 @@ function customizePost(api) {
         });
       }
     );
-  }
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  // Always animated
-  const siteSettings = api.container.lookup("service:site-settings");
-  if (siteSettings.animated_avatars_always_animate) {
-    api.reopenWidget("post", {
-      didRenderWidget() {
-        if (
-          this.attrs.animated_avatar &&
-          this.siteSettings.animated_avatars_always_animate
-        ) {
-          document
-            .querySelectorAll(".animated-avatar .main-avatar img.avatar")
-            .forEach((img) => {
-              img.src = img.src.replace(/\.png$/, ".gif");
-            });
-        }
-      },
-    });
-  }
-
-  // Only animate on hover, and keyboard focus events
-  else {
-    api.onAppEvent(
-      "keyboard:move-selection",
-      ({ articles, selectedArticle }) => {
-        articles?.forEach((a) => {
-          if (a.classList.contains("animated-avatar")) {
-            pause(a.querySelector(".main-avatar img.avatar"));
-          }
-        });
-        if (selectedArticle.classList.contains("animated-avatar")) {
-          playAvatarAnimation(
-            selectedArticle.querySelector(".main-avatar img.avatar")
-          );
-        }
-      }
-    );
-
-    api.reopenWidget("post", {
-      mouseOver: getAnimateAvatarEventFn(
-        ".animated-avatar",
-        ".main-avatar>.avatar"
-      ),
-      mouseOut: getPauseAnimateAvatarEventFn(
-        ".animated-avatar",
-        ".main-avatar>.avatar"
-      ),
-    });
   }
 }
 
