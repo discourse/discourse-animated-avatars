@@ -57,51 +57,6 @@ function resumeAll() {
   });
 }
 
-function getPauseAnimateAvatarEventFn(
-  eventParentSelector = null,
-  avatarSelector = null
-) {
-  return (e) => {
-    const target =
-      eventParentSelector != null
-        ? e.target.closest(eventParentSelector)
-        : e.target;
-
-    // We are still hovering over a parent target, do not pause
-    const center = document.elementsFromPoint(e.clientX, e.clientY);
-    if (center.some((ele) => ele === target)) {
-      return;
-    }
-
-    const images =
-      avatarSelector != null
-        ? target?.querySelectorAll(avatarSelector)
-        : [target];
-    images?.forEach((img) => {
-      pause(img);
-    });
-  };
-}
-
-function getAnimateAvatarEventFn(
-  eventParentSelector = null,
-  avatarSelector = null
-) {
-  return (e) => {
-    const target =
-      eventParentSelector != null
-        ? e.target.closest(eventParentSelector)
-        : e.target;
-    const images =
-      avatarSelector != null
-        ? target?.querySelectorAll(avatarSelector)
-        : [target];
-    images?.forEach((img) => {
-      playAvatarAnimation(img);
-    });
-  };
-}
-
 function customizePost(api) {
   const ANIMATED_AVATAR_ACTIVE = Symbol("avatar-animated-state");
 
