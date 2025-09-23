@@ -5,17 +5,6 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 let animatedImages = [];
 let allowAnimation = true;
 
-function userCardShown() {
-  return document.querySelector("#user-card.show");
-}
-
-// Only play when the user card is not shown
-function playAvatarAnimation(img) {
-  if (!userCardShown()) {
-    play(img);
-  }
-}
-
 function play(img) {
   if (img && allowAnimation) {
     let animatedImg = img.src.replace(/\.png$/, ".gif");
@@ -23,16 +12,6 @@ function play(img) {
       img.src = img.src.replace(/\.png$/, ".gif");
       animatedImages.push(img);
     }
-  }
-}
-
-function pause(img) {
-  if (img) {
-    let animatedImg = img.src.replace(/\.gif$/, ".png");
-    if (animatedImg !== img.src) {
-      img.src = img.src.replace(/\.gif$/, ".png");
-    }
-    animatedImages = animatedImages.filter((item) => item !== img);
   }
 }
 
