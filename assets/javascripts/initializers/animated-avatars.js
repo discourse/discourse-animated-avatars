@@ -1,21 +1,9 @@
 import { next } from "@ember/runloop";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 let animatedImages = [];
 let allowAnimation = true;
-
-function userCardShown() {
-  return document.querySelector("#user-card.show");
-}
-
-// Only play when the user card is not shown
-function playAvatarAnimation(img) {
-  if (!userCardShown()) {
-    play(img);
-  }
-}
 
 function play(img) {
   if (img && allowAnimation) {
@@ -24,16 +12,6 @@ function play(img) {
       img.src = img.src.replace(/\.png$/, ".gif");
       animatedImages.push(img);
     }
-  }
-}
-
-function pause(img) {
-  if (img) {
-    let animatedImg = img.src.replace(/\.gif$/, ".png");
-    if (animatedImg !== img.src) {
-      img.src = img.src.replace(/\.gif$/, ".png");
-    }
-    animatedImages = animatedImages.filter((item) => item !== img);
   }
 }
 
@@ -56,51 +34,6 @@ function resumeAll() {
   animatedImages?.forEach((img) => {
     img.src = img.src.replace(/\.png$/, ".gif");
   });
-}
-
-function getPauseAnimateAvatarEventFn(
-  eventParentSelector = null,
-  avatarSelector = null
-) {
-  return (e) => {
-    const target =
-      eventParentSelector != null
-        ? e.target.closest(eventParentSelector)
-        : e.target;
-
-    // We are still hovering over a parent target, do not pause
-    const center = document.elementsFromPoint(e.clientX, e.clientY);
-    if (center.some((ele) => ele === target)) {
-      return;
-    }
-
-    const images =
-      avatarSelector != null
-        ? target?.querySelectorAll(avatarSelector)
-        : [target];
-    images?.forEach((img) => {
-      pause(img);
-    });
-  };
-}
-
-function getAnimateAvatarEventFn(
-  eventParentSelector = null,
-  avatarSelector = null
-) {
-  return (e) => {
-    const target =
-      eventParentSelector != null
-        ? e.target.closest(eventParentSelector)
-        : e.target;
-    const images =
-      avatarSelector != null
-        ? target?.querySelectorAll(avatarSelector)
-        : [target];
-    images?.forEach((img) => {
-      playAvatarAnimation(img);
-    });
-  };
 }
 
 function customizePost(api) {
@@ -154,61 +87,6 @@ function customizePost(api) {
         });
       }
     );
-  }
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    customizeWidgetPost(api)
-  );
-}
-
-function customizeWidgetPost(api) {
-  // Always animated
-  const siteSettings = api.container.lookup("service:site-settings");
-  if (siteSettings.animated_avatars_always_animate) {
-    api.reopenWidget("post", {
-      didRenderWidget() {
-        if (
-          this.attrs.animated_avatar &&
-          this.siteSettings.animated_avatars_always_animate
-        ) {
-          document
-            .querySelectorAll(".animated-avatar .main-avatar img.avatar")
-            .forEach((img) => {
-              img.src = img.src.replace(/\.png$/, ".gif");
-            });
-        }
-      },
-    });
-  }
-
-  // Only animate on hover, and keyboard focus events
-  else {
-    api.onAppEvent(
-      "keyboard:move-selection",
-      ({ articles, selectedArticle }) => {
-        articles?.forEach((a) => {
-          if (a.classList.contains("animated-avatar")) {
-            pause(a.querySelector(".main-avatar img.avatar"));
-          }
-        });
-        if (selectedArticle.classList.contains("animated-avatar")) {
-          playAvatarAnimation(
-            selectedArticle.querySelector(".main-avatar img.avatar")
-          );
-        }
-      }
-    );
-
-    api.reopenWidget("post", {
-      mouseOver: getAnimateAvatarEventFn(
-        ".animated-avatar",
-        ".main-avatar>.avatar"
-      ),
-      mouseOut: getPauseAnimateAvatarEventFn(
-        ".animated-avatar",
-        ".main-avatar>.avatar"
-      ),
-    });
   }
 }
 
