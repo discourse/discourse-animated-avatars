@@ -1,9 +1,9 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import Topics from "../fixtures/topic-fixtures";
 
-acceptance(`Animated avatars topic tests`, function (needs) {
+acceptance("Animated avatars topic tests", function (needs) {
   needs.pretender((server, helper) => {
     const topicPath = "/t/1000.json";
     const topicResponse = Topics[topicPath];
@@ -12,11 +12,13 @@ acceptance(`Animated avatars topic tests`, function (needs) {
 
   test("does not have animated class with no animated avatar", async function (assert) {
     await visit("/t/-/280");
-    assert.notOk(exists(".animated-avatar"), "adds an animated-avatar class");
+    assert
+      .dom(".animated-avatar")
+      .doesNotExist("does not add an animated-avatar class");
   });
 
   test("has animated class when animated avatar", async function (assert) {
     await visit("/t/-/1000");
-    assert.ok(exists(".animated-avatar"), "adds an animated-avatar class");
+    assert.dom(".animated-avatar").exists("adds an animated-avatar class");
   });
 });
