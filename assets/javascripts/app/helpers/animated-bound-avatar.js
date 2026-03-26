@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
@@ -9,5 +9,5 @@ export default function (user, size) {
     return avatar;
   }
 
-  return htmlSafe(avatar.toString().replace(/\.png/, ".gif"));
+  return trustHTML(avatar.toString().replace(/\.png/, ".gif"));
 }
