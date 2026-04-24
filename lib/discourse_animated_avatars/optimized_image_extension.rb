@@ -21,6 +21,15 @@ module DiscourseAnimatedAvatars
           %W[--#{resize_method} #{dimensions} --optimize=3 --output #{to} #{from}],
         )
       end
+
+      # Override resize to preserve animation for GIFs
+      def resize(from, to, width, height, opts = {})
+        if opts[:upload_id]
+          upload = Upload.find_by(id: opts[:upload_id])
+          return resize_animated(from, to, width, height, opts) if upload&.extension == "gif"
+        end
+        super
+      end
     end
   end
 end
