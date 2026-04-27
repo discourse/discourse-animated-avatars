@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::CreateAvatarThumbnails do
   fab!(:user)
 
@@ -13,8 +11,7 @@ RSpec.describe Jobs::CreateAvatarThumbnails do
   end
 
   it "preserves animation in optimized avatar images",
-     skip: !system("which gifsicle > /dev/null 2>&1") do
-    skip "gifsicle not installed" unless system("which gifsicle > /dev/null 2>&1")
+    skip: !system("which gifsicle > /dev/null 2>&1") do
     file = File.open(animated_gif_path)
     upload =
       UploadCreator.new(file, "animated_avatar.gif", type: "avatar", for_user: user).create_for(
@@ -27,8 +24,7 @@ RSpec.describe Jobs::CreateAvatarThumbnails do
 
     # create optimized images
     Discourse.avatar_sizes.each do |size|
-      result = OptimizedImage.create_for(upload, size, size)
-      puts "Created optimized image #{size}x#{size}: #{result.inspect}" if result.nil?
+      OptimizedImage.create_for(upload, size, size)
     end
 
     upload.reload
