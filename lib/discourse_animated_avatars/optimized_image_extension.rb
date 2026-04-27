@@ -21,6 +21,23 @@ module DiscourseAnimatedAvatars
           %W[--#{resize_method} #{dimensions} --optimize=3 --output #{to} #{from}],
         )
       end
+
+      # Override resize to preserve animation for GIFs
+      def resize(from, to, width, height, opts = {})
+        id = opts[:upload_id]
+        if id && Upload.find_by(id:)&.extension == "gif"
+          # Try to use Gifsicle if available
+          begin
+            return resize_animated(from, to, width, height, opts)
+          rescue => e
+            # Gifsicle not available or failed, log warning and fall back to default
+            Rails.logger.warn(
+              "Gifsicle resize failed for upload #{id}, falling back to ImageMagick: #{e.message}",
+            )
+          end
+        end
+        super
+      end
     end
   end
 end
