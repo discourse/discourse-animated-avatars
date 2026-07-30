@@ -1,5 +1,5 @@
 import { trustHTML } from "@ember/template";
-import boundAvatar from "discourse/helpers/bound-avatar";
+import boundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default function (user, size) {
