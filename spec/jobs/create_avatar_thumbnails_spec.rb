@@ -10,8 +10,8 @@ RSpec.describe Jobs::CreateAvatarThumbnails do
     SiteSetting.authorized_extensions = "gif"
   end
 
-  it "preserves animation in optimized avatar images",
-     skip: !system("which gifsicle > /dev/null 2>&1") do
+  it "preserves animation in optimized avatar images" do
+    skip "gifsicle not installed" unless system("which gifsicle > /dev/null 2>&1")
     file = File.open(animated_gif_path)
     upload =
       UploadCreator.new(file, "animated_avatar.gif", type: "avatar", for_user: user).create_for(
