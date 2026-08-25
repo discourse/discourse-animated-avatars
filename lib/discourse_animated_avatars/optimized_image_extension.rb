@@ -6,7 +6,8 @@ module DiscourseAnimatedAvatars
 
     class_methods do
       def resize_animated(from, to, width, height, opts = {})
-        optimize("resize_animated", from, to, "#{width}x#{height}", opts)
+        instructions = resize_animated_instructions(from, to, "#{width}x#{height}", opts)
+        Discourse::Utils.execute_command(*instructions)
       end
 
       def resize_animated_instructions(from, to, dimensions, opts = {})
