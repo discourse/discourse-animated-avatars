@@ -6,14 +6,15 @@ module DiscourseAnimatedAvatars
 
     def crop!
       filename_with_correct_ext = "image.#{@image_info.type}"
-      if @opts[:type] == "avatar"
+      # Uses Gifsicle, only supporting GIFs
+      if @opts[:type] == "avatar" && @image_info.type.to_s == "gif"
         width = height = Discourse.avatar_sizes.max
 
         # Center crop
         original_size_squared = @image_info.size.min
         start_x = (@image_info.size[0] - original_size_squared) / 2
         start_y = (@image_info.size[1] - original_size_squared) / 2
-        crop = "#{start_x},#{start_y}+#{original_size_squared}" # Gifsicle crop args
+        crop = "#{start_x},#{start_y}+#{original_size_squared}x#{original_size_squared}"
 
         OptimizedImage.resize_animated(
           @file.path,
