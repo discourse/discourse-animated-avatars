@@ -15,7 +15,7 @@ module DiscourseAnimatedAvatars
         start_y = (@image_info.size[1] - original_size_squared) / 2
         crop = "#{start_x},#{start_y}+#{original_size_squared}x#{original_size_squared}" # Gifsicle crop args
 
-        OptimizedImage.resize_animated(
+        OptimizedImage.resize_animated_gif(
           @file.path,
           @file.path,
           width,

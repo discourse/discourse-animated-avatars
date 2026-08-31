@@ -5,7 +5,7 @@ module DiscourseAnimatedAvatars
     extend ActiveSupport::Concern
 
     def should_crop?
-      return false if ["avatar"].include?(@opts[:type]) && animated?
+      return false if @opts[:type] == "avatar" && @image_info.type.to_s == "gif" && animated?
       super
     end
   end
