@@ -6,8 +6,12 @@ module DiscourseAnimatedAvatars
 
     def get_optimized_image(upload, size)
       return upload if upload.extension == "gif" && request.format == "image/gif"
-      return upload if upload.extension == "webp" && upload.animated? && request.format == "image/webp"
-      return upload if upload.extension == "png" && upload.animated? && request.format == "image/apng"
+      if upload.extension == "webp" && upload.animated? && request.format == "image/webp"
+        return upload
+      end
+      if upload.extension == "png" && upload.animated? && request.format == "image/apng"
+        return upload
+      end
       super
     end
   end

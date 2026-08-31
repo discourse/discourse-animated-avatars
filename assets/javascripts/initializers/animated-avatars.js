@@ -127,7 +127,10 @@ export default {
             "#user-card img.animated-avatar"
           );
           if (cardImg) {
-            play(cardImg, animatedExtension(userCardService?.user?.animated_avatar));
+            play(
+              cardImg,
+              animatedExtension(userCardService?.user?.animated_avatar)
+            );
           }
         });
       });
