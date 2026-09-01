@@ -9,9 +9,6 @@ module DiscourseAnimatedAvatars
       if upload.extension == "webp" && upload.animated? && request.format == "image/webp"
         return upload
       end
-      if upload.extension == "png" && upload.animated? && request.format == "image/apng"
-        return upload
-      end
       super
     end
   end

@@ -56,7 +56,6 @@ module DiscourseAnimatedAvatars
       end
 
       # Override resize to preserve animation for GIFs and animated WebP.
-      # APNG thumbnails are intentionally first-frame only (super handles them correctly).
       def resize(from, to, width, height, opts = {})
         if (upload = Upload.find_by(id: opts[:upload_id]))
           resize_method =

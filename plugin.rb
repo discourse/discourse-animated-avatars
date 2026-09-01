@@ -6,7 +6,6 @@
 
 after_initialize do
   require_relative "lib/discourse_animated_avatars/upload_creator_animated_webp_extension"
-  require_relative "lib/discourse_animated_avatars/upload_creator_animated_apng_extension"
   require_relative "lib/discourse_animated_avatars/upload_creator_gifsicle_extension"
   require_relative "lib/discourse_animated_avatars/upload_creator_no_gifsicle_extension"
   require_relative "lib/discourse_animated_avatars/optimized_image_extension"
@@ -35,7 +34,6 @@ after_initialize do
       UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorNoGifsicleExtension)
     end
     UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension)
-    UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedApngExtension)
 
     OptimizedImage.prepend(DiscourseAnimatedAvatars::OptimizedImageExtension)
     UserAvatarsController.prepend(DiscourseAnimatedAvatars::UserAvatarsControllerExtension)
@@ -58,10 +56,8 @@ after_initialize do
   end
 end
 
-Mime::Type.register "image/apng", :apng, [], %w[apng] unless Mime::Type.lookup_by_extension(:apng)
-
 Discourse::Application.routes.append do
-  %i[gif webp apng].each do |fmt|
+  %i[gif webp].each do |fmt|
     get "user_avatar/:hostname/:username/:size/:version.#{fmt}" => "user_avatars#show",
         :constraints => {
           hostname: /[\w\.-]+/,
