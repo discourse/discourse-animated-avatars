@@ -41,8 +41,6 @@ module DiscourseAnimatedAvatars
             #{width}x#{height}^
             -extent
             #{width}x#{height}
-            -layers
-            optimize
             #{to}
           ],
         )
