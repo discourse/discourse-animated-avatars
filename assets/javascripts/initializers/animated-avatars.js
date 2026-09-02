@@ -1,23 +1,24 @@
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prefersReducedMotion } from "discourse/lib/utilities";
+import { animatedExtension } from "discourse/plugins/discourse-animated-avatars/app/lib/animated-avatar-utils";
 
-let animatedImages = [];
+let animatedImages = []; // [{ img, ext }, ...]
 let allowAnimation = true;
 
-function play(img) {
-  if (img && allowAnimation) {
-    let animatedImg = img.src.replace(/\.png$/, ".gif");
-    if (animatedImg !== img.src) {
-      img.src = img.src.replace(/\.png$/, ".gif");
-      animatedImages.push(img);
+function play(img, ext) {
+  if (img && allowAnimation && ext) {
+    const animatedSrc = img.src.replace(/\.png$/, `.${ext}`);
+    if (animatedSrc !== img.src) {
+      img.src = animatedSrc;
+      animatedImages.push({ img, ext });
     }
   }
 }
 
 function pauseAll(resumable = false) {
-  animatedImages?.forEach((img) => {
-    img.src = img.src.replace(/\.gif$/, ".png");
+  animatedImages?.forEach(({ img, ext }) => {
+    img.src = img.src.slice(0, -(ext.length + 1)) + ".png";
   });
 
   // pause all either due to a resumable event (temporarily prevent any animation event to fire until event is over)
@@ -31,8 +32,8 @@ function pauseAll(resumable = false) {
 
 function resumeAll() {
   allowAnimation = true;
-  animatedImages?.forEach((img) => {
-    img.src = img.src.replace(/\.png$/, ".gif");
+  animatedImages?.forEach(({ img, ext }) => {
+    img.src = img.src.replace(/\.png$/, `.${ext}`);
   });
 }
 
@@ -52,15 +53,16 @@ function customizePost(api) {
   api.registerValueTransformer(
     "post-avatar-template",
     ({ value, context: { post, keyboardSelected, decoratorState } }) => {
+      const ext = animatedExtension(post.animated_avatar);
       const animate =
         value &&
-        post.animated_avatar &&
+        ext &&
         (siteSettings.animated_avatars_always_animate ||
           keyboardSelected ||
           decoratorState?.get(ANIMATED_AVATAR_ACTIVE));
 
       if (animate) {
-        return value.replace(/\.png$/, ".gif");
+        return value.replace(/\.png$/, `.${ext}`);
       }
 
       return value;
@@ -112,6 +114,8 @@ export default {
         return [];
       });
 
+      const userCardService = api.container.lookup("service:user-card");
+
       api.onAppEvent("user-card:after-show", () => {
         // Allow render
         next(() => {
@@ -119,7 +123,15 @@ export default {
           pauseAll();
 
           // Play on user card with fewer conditions
-          play(document.querySelector("#user-card img.animated-avatar"));
+          const cardImg = document.querySelector(
+            "#user-card img.animated-avatar"
+          );
+          if (cardImg) {
+            play(
+              cardImg,
+              animatedExtension(userCardService?.user?.animated_avatar)
+            );
+          }
         });
       });
     });
