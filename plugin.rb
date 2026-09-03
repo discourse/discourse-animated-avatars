@@ -6,6 +6,7 @@
 
 after_initialize do
   require_relative "lib/discourse_animated_avatars/upload_creator_animated_webp_extension"
+  require_relative "lib/discourse_animated_avatars/upload_creator_gif_to_webp_extension"
   require_relative "lib/discourse_animated_avatars/upload_creator_gifsicle_extension"
   require_relative "lib/discourse_animated_avatars/upload_creator_no_gifsicle_extension"
   require_relative "lib/discourse_animated_avatars/optimized_image_extension"
@@ -34,6 +35,7 @@ after_initialize do
       UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorNoGifsicleExtension)
     end
     UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension)
+    UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorGifToWebpExtension)
 
     OptimizedImage.prepend(DiscourseAnimatedAvatars::OptimizedImageExtension)
     UserAvatarsController.prepend(DiscourseAnimatedAvatars::UserAvatarsControllerExtension)
