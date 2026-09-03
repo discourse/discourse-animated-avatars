@@ -6,6 +6,7 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorGifsicleExtension do
   before do
     enable_current_plugin
     SiteSetting.authorized_extensions = "gif|png|jpg|webp"
+    SiteSetting.animated_gif_avatar_to_webp = false
   end
 
   def make_creator(file, filename, opts = {})
@@ -71,6 +72,7 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorNoGifsicleExtension do
   before do
     enable_current_plugin
     SiteSetting.authorized_extensions = "gif|png|jpg|webp"
+    SiteSetting.animated_gif_avatar_to_webp = false
   end
 
   def make_creator(file, filename, opts = {})
