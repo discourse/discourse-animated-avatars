@@ -41,9 +41,12 @@ module DiscourseAnimatedAvatars
             #{width}x#{height}^
             -extent
             #{width}x#{height}
-            #{to}
           ],
         )
+
+        instructions.concat(["-quality", opts[:quality].to_s]) if opts[:quality]
+
+        instructions << to
 
         ImageMagick.magick(
           *instructions,
@@ -53,29 +56,6 @@ module DiscourseAnimatedAvatars
           nice: 10,
           timeout: OptimizedImage::MAX_CONVERT_SECONDS,
         )
-      end
-
-      # Override resize to preserve animation for GIFs and animated WebP.
-      def resize(from, to, width, height, opts = {})
-        if (upload = Upload.find_by(id: opts[:upload_id]))
-          resize_method =
-            if upload.extension == "gif"
-              :resize_animated_gif
-            elsif upload.extension == "webp" && upload.animated?
-              :resize_animated_webp
-            end
-
-          if resize_method
-            begin
-              return send(resize_method, from, to, width, height, opts)
-            rescue => e
-              Rails.logger.warn(
-                "#{resize_method} failed for upload #{opts[:upload_id]}, falling back to ImageMagick: #{e.message}",
-              )
-            end
-          end
-        end
-        super
       end
     end
   end
