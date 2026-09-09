@@ -4,14 +4,9 @@
 # version: 0.1
 # url: https://github.com/discourse/discourse-animated-avatars
 
-after_initialize do
-  require_relative "lib/discourse_animated_avatars/upload_creator_animated_webp_extension"
-  require_relative "lib/discourse_animated_avatars/upload_creator_gif_to_webp_extension"
-  require_relative "lib/discourse_animated_avatars/upload_creator_gifsicle_extension"
-  require_relative "lib/discourse_animated_avatars/upload_creator_no_gifsicle_extension"
-  require_relative "lib/discourse_animated_avatars/optimized_image_extension"
-  require_relative "lib/discourse_animated_avatars/user_avatars_controller_extension"
+require_relative "lib/discourse_animated_avatars/engine"
 
+after_initialize do
   reloadable_patch do
     gifsicle_installed =
       begin
