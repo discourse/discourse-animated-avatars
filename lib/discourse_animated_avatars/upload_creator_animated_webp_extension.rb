@@ -15,6 +15,11 @@ module DiscourseAnimatedAvatars
         crop_size: @image_info.size.min,
       )
       extract_image_info!
+    rescue => error
+      Discourse.warn_exception(
+        error,
+        message: "Failed to resize animated WebP avatar, uploading without crop",
+      )
     end
   end
 end
