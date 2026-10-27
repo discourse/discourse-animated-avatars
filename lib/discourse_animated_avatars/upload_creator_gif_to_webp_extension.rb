@@ -29,6 +29,12 @@ module DiscourseAnimatedAvatars
       @file = webp
       @filename = @filename.sub(/\.gif$/i, ".webp")
       extract_image_info!
+    rescue => error
+      webp.close!
+      Discourse.warn_exception(
+        error,
+        message: "Failed to convert animated GIF to WebP, uploading original",
+      )
     end
 
     private
