@@ -45,24 +45,28 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorGifsicleExtension do
     expect(upload.animated).to eq(true)
   end
 
-  it "center-crops a non-square animated GIF avatar to a square" do
+  it "resizes and crops an animated GIF avatar while preserving animation" do
     skip "gifsicle not installed" unless system("which gifsicle > /dev/null 2>&1")
-
-    gif = Tempfile.new(%w[nonsquare .gif])
-    IO.copy_stream(File.expand_path("../fixtures/images/nonsquare_animated.gif", __dir__), gif)
-    gif.rewind
+    SiteSetting.avatar_sizes = "20"
 
     upload =
-      make_creator(gif, "nonsquare_animated.gif", type: "avatar", force_optimize: true).create_for(
-        user.id,
-      )
+      UploadCreator.new(
+        file_from_fixtures(
+          "nonsquare_animated.gif",
+          "images",
+          DiscourseAnimatedAvatars::Engine.root.join("spec/fixtures"),
+        ),
+        "nonsquare_animated.gif",
+        type: "avatar",
+        force_optimize: true,
+      ).create_for(user.id)
 
     expect(upload).to be_persisted
-    expect(upload.animated).to eq(true)
+    expect(upload.extension).to eq("gif")
 
     stored_path = Discourse.store.path_for(upload)
-    w, h = FastImage.size(stored_path)
-    expect(w).to eq(h)
+    expect(FastImage.size(stored_path)).to eq([20, 20])
+    expect(FastImage.animated?(stored_path)).to eq(true)
   end
 end
 

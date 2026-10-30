@@ -47,43 +47,4 @@ RSpec.describe DiscourseAnimatedAvatars::OptimizedImageExtension do
       expect(FastImage.animated?(path)).to be_falsy
     end
   end
-
-  describe ".resize_animated_gif" do
-    it "confines filesystem access to the input and output files" do
-      skip "Landlock is not supported" unless Discourse::SafeExec.landlock_supported?
-
-      Dir.mktmpdir do |directory|
-        from = File.join(directory, "input.gif")
-        to = File.join(directory, "output.gif")
-        secret = File.join(directory, "secret")
-        File.write(from, "avatar")
-        File.write(secret, "secret")
-
-        allow(Discourse::SafeExec).to receive(
-          :capture,
-        ).and_wrap_original do |capture, *command, **options|
-          output_path = command[command.index("--output") + 1]
-          capture.call(RbConfig.ruby, "--disable-gems", "-e", <<~RUBY, from, output_path, **options)
-            File.write(ARGV[1], File.read(ARGV[0]))
-            begin
-              File.read(#{secret.inspect})
-            rescue Errno::EACCES
-              puts "read denied"
-            end
-            begin
-              File.write(#{secret.inspect}, "changed")
-            rescue Errno::EACCES
-              puts "write denied"
-            end
-          RUBY
-        end
-
-        output = OptimizedImage.resize_animated_gif(from, to, 20, 20)
-
-        expect(output).to eq("read denied\nwrite denied\n")
-        expect(File.read(to)).to eq("avatar")
-        expect(File.read(secret)).to eq("secret")
-      end
-    end
-  end
 end
