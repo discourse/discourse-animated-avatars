@@ -5,7 +5,8 @@ RSpec.describe DiscourseAnimatedAvatars::OptimizedImageExtension do
 
   def run_probe(script:, from:, to:)
     allow(Discourse::SafeExec).to receive(:capture).and_wrap_original do |capture, *args, **options|
-      capture.call(RbConfig.ruby, "--disable-gems", "-e", script, from, to, **options)
+      output_path = args[args.index("--output") + 1]
+      capture.call(RbConfig.ruby, "--disable-gems", "-e", script, from, output_path, **options)
     end
 
     OptimizedImage.resize_animated_gif(from, to, 20, 20)
@@ -32,16 +33,13 @@ RSpec.describe DiscourseAnimatedAvatars::OptimizedImageExtension do
       end
     end
 
-    it "confines filesystem access to the input and output locations" do
+    it "confines filesystem access to the input and output files" do
       skip "Landlock is not supported" unless Discourse::SafeExec.landlock_supported?
 
       Dir.mktmpdir do |directory|
-        input_directory = File.join(directory, "input")
-        output_directory = File.join(directory, "output")
-        FileUtils.mkdir_p([input_directory, output_directory])
-        from = File.join(input_directory, "avatar.gif")
-        to = File.join(output_directory, "avatar.gif")
-        secret = File.join(input_directory, "secret")
+        from = File.join(directory, "input.gif")
+        to = File.join(directory, "output.gif")
+        secret = File.join(directory, "secret")
         File.write(from, "avatar")
         File.write(secret, "secret")
 
@@ -104,11 +102,20 @@ RSpec.describe DiscourseAnimatedAvatars::OptimizedImageExtension do
 
     it "terminates processing that exceeds the conversion timeout" do
       Tempfile.create("avatar") do |file|
+        file.write("original avatar")
+        file.flush
+
         stub_const(OptimizedImage, "MAX_CONVERT_SECONDS", 0.1) do
-          expect { run_probe(script: "sleep 30", from: file.path, to: file.path) }.to raise_error(
-            Discourse::Utils::CommandError,
-          )
+          expect {
+            run_probe(
+              script: 'File.write(ARGV[1], "partial output"); sleep 30',
+              from: file.path,
+              to: file.path,
+            )
+          }.to raise_error(Discourse::Utils::CommandError)
         end
+
+        expect(File.read(file.path)).to eq("original avatar")
       end
     end
   end
