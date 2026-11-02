@@ -6,8 +6,23 @@ module DiscourseAnimatedAvatars
 
     class_methods do
       def resize_animated_gif(from, to, width, height, opts = {})
-        instructions = resize_animated_gif_instructions(from, to, "#{width}x#{height}", opts)
-        Discourse::Utils.execute_command(*instructions)
+        ensure_safe_paths!(from, to)
+        ImageProcessing::OutputFile.write(to) do |temporary_path|
+          instructions =
+            resize_animated_gif_instructions(from, temporary_path, "#{width}x#{height}", opts)
+          Discourse::SafeExec.capture(
+            *instructions,
+            env: ENV.slice("PATH", "LANG", "LC_ALL"),
+            unsetenv_others: true,
+            read: [*Discourse::SafeExec.default_read_paths, from],
+            write: [temporary_path],
+            execute: Discourse::SafeExec.default_execute_paths,
+            timeout: OptimizedImage::MAX_CONVERT_SECONDS,
+            rlimits: ImageMagick::RLIMITS,
+            seccomp_deny_network: true,
+            seccomp_deny_child_processes: true,
+          )
+        end
       end
 
       def resize_animated_gif_instructions(from, to, dimensions, opts = {})
