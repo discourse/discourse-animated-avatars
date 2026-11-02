@@ -8,31 +8,9 @@ require_relative "lib/discourse_animated_avatars/engine"
 
 after_initialize do
   reloadable_patch do
-    gifsicle_installed =
-      begin
-        Discourse::Utils.execute_command(
-          "gifsicle",
-          "--version",
-          "&>",
-          "/dev/null",
-          failure_message: "gifsicle not found",
-        )
-        true
-      rescue StandardError
-        false
-      end
-
-    # new crop functions if gifsicle is installed
-    if gifsicle_installed
-      UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorGifsicleExtension)
-    else
-      # fallback if no gifsicle, no cropping for animated avatars
-      UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorNoGifsicleExtension)
-    end
-    UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension)
+    # GifToWebpExtension is prepended last so it runs first, converting format before AnimatedAvatarExtension resizes.
+    UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedAvatarExtension)
     UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorGifToWebpExtension)
-
-    OptimizedImage.prepend(DiscourseAnimatedAvatars::OptimizedImageExtension)
     UserAvatarsController.prepend(DiscourseAnimatedAvatars::UserAvatarsControllerExtension)
   end
 

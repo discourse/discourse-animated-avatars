@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension do
+RSpec.describe DiscourseAnimatedAvatars::UploadCreatorAnimatedAvatarExtension do
   fab!(:user)
 
   before do
@@ -18,7 +18,7 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension do
     File.expand_path("../fixtures/images/#{name}", __dir__)
   end
 
-  it "crops a non-square animated WebP avatar to a square" do
+  it "resizes a non-square animated WebP avatar to a square" do
     webp = Tempfile.new(%w[nonsquare .webp])
     IO.copy_stream(fixture_path("nonsquare_animated.webp"), webp)
     webp.rewind
@@ -33,21 +33,23 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorAnimatedWebpExtension do
 
     expect(upload).to be_persisted
     expect(upload.animated).to eq(true)
-
-    stored_path = Discourse.store.path_for(upload)
-    w, h = FastImage.size(stored_path)
+    w, h = FastImage.size(Discourse.store.path_for(upload))
     expect(w).to eq(h)
   end
 
-  it "successfully uploads an animated WebP avatar" do
-    webp = Tempfile.new(%w[animated .webp])
-    IO.copy_stream(fixture_path("animated.webp"), webp)
-    webp.rewind
+  it "resizes an animated GIF avatar in place" do
+    SiteSetting.animated_gif_avatar_to_webp = false
 
     upload =
-      make_creator(webp, "animated.webp", type: "avatar", force_optimize: true).create_for(user.id)
+      make_creator(
+        file_from_fixtures("animated.gif"),
+        "animated.gif",
+        type: "avatar",
+        force_optimize: true,
+      ).create_for(user.id)
 
     expect(upload).to be_persisted
+    expect(upload.extension).to eq("gif")
     expect(upload.animated).to eq(true)
   end
 end
