@@ -8,9 +8,7 @@ require_relative "lib/discourse_animated_avatars/engine"
 
 after_initialize do
   reloadable_patch do
-    # GifToWebpExtension is prepended last so it runs first, converting format before AnimatedAvatarExtension resizes.
     UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorAnimatedAvatarExtension)
-    UploadCreator.prepend(DiscourseAnimatedAvatars::UploadCreatorGifToWebpExtension)
     UserAvatarsController.prepend(DiscourseAnimatedAvatars::UserAvatarsControllerExtension)
   end
 

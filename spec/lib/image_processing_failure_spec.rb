@@ -11,7 +11,6 @@ RSpec.describe DiscourseAnimatedAvatars do
         raise StandardError, "vips failure" if kwargs[:animated]
         original.call(**kwargs)
       end
-      allow(DiscourseVips).to receive(:gif_to_webp).and_raise(StandardError, "vips failure")
     end
 
     def fixture_path(name)
