@@ -19,6 +19,7 @@ module DiscourseAnimatedAvatars
         height: size,
         size: :force,
         animated: true,
+        strip_metadata: SiteSetting.strip_image_metadata,
         output_format: convert_to_webp ? "webp" : @image_info.type.to_s,
         quality: convert_to_webp ? SiteSetting.animated_gif_avatar_webp_quality : nil,
         operation: :upload_animated_avatar,

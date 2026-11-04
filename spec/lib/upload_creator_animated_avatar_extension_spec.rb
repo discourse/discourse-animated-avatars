@@ -88,6 +88,38 @@ RSpec.describe DiscourseAnimatedAvatars::UploadCreatorAnimatedAvatarExtension do
     expect(uploads.first.filesize).to be < uploads.last.filesize
   end
 
+  it "strips animated avatar metadata when configured while preserving the encoded frames" do
+    SiteSetting.composer_media_optimization_image_enabled = false
+
+    outputs =
+      [false, true].map do |strip_metadata|
+        SiteSetting.strip_image_metadata = strip_metadata
+        upload =
+          UploadCreator.new(
+            file_from_fixtures("animated.gif"),
+            "animated.gif",
+            type: "avatar",
+            force_optimize: true,
+          ).create_for(user.id)
+        expect(upload).to be_persisted
+        data = File.binread(Discourse.store.path_for(upload))
+        chunks = []
+        offset = 12
+        while offset + 8 <= data.bytesize
+          length = data.byteslice(offset + 4, 4).unpack1("V")
+          chunks << [data.byteslice(offset, 4), data.byteslice(offset + 8, length)]
+          offset += 8 + length + length % 2
+        end
+        chunks
+      end
+
+    expect(outputs.first.map(&:first)).to include("ICCP", "EXIF")
+    expect(outputs.last.map(&:first) & ["ICCP", "EXIF", "XMP "]).to be_empty
+    expect(outputs.last.select { |type, _| type == "ANMF" }).to eq(
+      outputs.first.select { |type, _| type == "ANMF" },
+    )
+  end
+
   it "preserves the GIF format for an animated image outside an avatar upload" do
     upload =
       UploadCreator.new(file_from_fixtures("animated.gif"), "animated.gif").create_for(user.id)
